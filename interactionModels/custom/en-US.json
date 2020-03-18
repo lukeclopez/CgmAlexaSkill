@@ -1,0 +1,68 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "c. g. m.",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": [
+            "never mind",
+            "cancel"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+            "help me",
+            "help"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": [
+            "stop"
+          ]
+        },
+        {
+          "name": "BloodSugarIntent",
+          "slots": [
+            {
+              "name": "subject",
+              "type": "subject"
+            }
+          ],
+          "samples": [
+            "what {subject} sugar is",
+            "what {subject} blood sugar is",
+            "what is {subject} sugar",
+            "what is {subject} blood sugar"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": [
+            "home"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "luke\u0027s"
+              }
+            },
+            {
+              "name": {
+                "value": "my"
+              }
+            }
+          ],
+          "name": "subject"
+        }
+      ]
+    }
+  },
+  "version": "4"
+}

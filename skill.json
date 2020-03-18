@@ -1,0 +1,32 @@
+{
+  "manifest": {
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:891843550736:function:fc63a03f-79d6-41e5-8d84-bf84d72f3759:Release_0"
+        },
+        "interfaces": []
+      }
+    },
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "name": "CGM",
+          "summary": "Sample Short Description",
+          "description": "Sample Full Description",
+          "examplePhrases": [
+            "Alexa open hello world",
+            "hello",
+            "help"
+          ],
+          "keywords": []
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Sample Testing Instructions.",
+      "category": "KNOWLEDGE_AND_TRIVIA",
+      "distributionCountries": []
+    }
+  }
+}

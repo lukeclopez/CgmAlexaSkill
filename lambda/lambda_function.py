@@ -62,15 +62,15 @@ class BloodSugarIntentHandler(AbstractRequestHandler):
         res = requests.get(BASE_URL + ENDPOINT + TOKEN)
 
         if res.status_code == 200:
-            data = json.loads(res.content)
+            data = json.loads(res.content)[0]
             input_subject = ask_utils.request_util.get_slot(
                 handler_input,
                 "subject"
             ).value
 
             subject = "your" if input_subject == "my" else "luke's"
-            blood_sugar = str(data[0]["sgv"])
-            direction = DIRECTIONS[data[0]["direction"]]
+            blood_sugar = str(data["sgv"])
+            direction = DIRECTIONS.get(data["direction"], "no direction found")
 
             speak_output = f"{subject} blood sugar is {blood_sugar} and {direction}."
         else:

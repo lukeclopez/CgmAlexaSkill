@@ -59,11 +59,14 @@ class BloodSugarIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("BloodSugarIntent")(handler_input)
 
     def handle(self, handler_input):
-        res = requests.get(BASE_URL + ENDPOINT + token)
+        res = requests.get(BASE_URL + ENDPOINT + TOKEN)
 
         if res.status_code == 200:
             data = json.loads(res.content)
-            input_subject = handler_input.request_envelope.request.intent.slots["subject"].value
+            input_subject = ask_utils.request_util.get_slot(
+                handler_input,
+                "subject"
+            ).value
 
             subject = "your" if input_subject == "my" else "luke's"
             blood_sugar = str(data[0]["sgv"])

@@ -63,15 +63,11 @@ class BloodSugarIntentHandler(AbstractRequestHandler):
 
         if res.status_code == 200:
             data = json.loads(res.content)
-            blood_sugar = str(data[0]["sgv"])
-            try:
-                direction = DIRECTIONS[data[0]["direction"]]
-            except KeyError:
-                logger.error(data[0]["direction"] + " not in DIRECTIONS")
-                direction = "unable to get direction data."
-
             input_subject = handler_input.request_envelope.request.intent.slots["subject"].value
+
             subject = "your" if input_subject == "my" else "luke's"
+            blood_sugar = str(data[0]["sgv"])
+            direction = DIRECTIONS[data[0]["direction"]]
 
             speak_output = f"{subject} blood sugar is {blood_sugar} and {direction}."
         else:

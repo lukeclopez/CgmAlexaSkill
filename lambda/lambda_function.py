@@ -4,19 +4,33 @@ import logging
 import json
 import os
 
-import ask_sdk_core.utils as ask_utils
-
-from ask_sdk_core.skill_builder import SkillBuilder
-from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
+from ask_sdk_core.dispatch_components import AbstractRequestHandler
+from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.handler_input import HandlerInput
-
+import ask_sdk_core.utils as ask_utils
 from ask_sdk_model import Response
 
 from setup import API_KEY
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+BASE_URL = "http://luke-lopez-cgm.herokuapp.com"
+ENDPOINT = "/api/v1/entries/sgv.json"
+TOKEN = "?token=" + API_KEY
+DIRECTIONS = {
+    "Flat": "steady",
+    "FortyFiveUp": "rising",
+    "FortyFiveDown": "falling",
+    "SingleUp": "single up",
+    "DoubleUp": "double up",
+    "SingleDown": "single down",
+    "DoubleDown": "double down",
+    "NONE": "no slope",
+    "NOT_COMPUTABLE": "the slope is not computable",
+    "RATE_OUT_OF_RANGE": "the rate is out of range"
+}
 
 
 class LaunchRequestHandler(AbstractRequestHandler):
@@ -45,31 +59,15 @@ class BloodSugarIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("BloodSugarIntent")(handler_input)
 
     def handle(self, handler_input):
-        base_url = "http://luke-lopez-cgm.herokuapp.com"
-        token = "?token=" + API_KEY
-        endpoint = "/api/v1/entries/sgv.json"
-
-        directions = {
-            "Flat": "steady",
-            "FortyFiveUp": "rising",
-            "FortyFiveDown": "falling",
-            "SingleUp": "single up",
-            "DoubleUp": "double up",
-            "SingleDown": "single down",
-            "DoubleDown": "double down",
-            "NONE": "no slope",
-            "NOT_COMPUTABLE": "the slope is not computable",
-            "RATE_OUT_OF_RANGE": "the rate is out of range"
-        }
-
-        res = requests.get(base_url + endpoint + token)
+        res = requests.get(BASE_URL + ENDPOINT + token)
 
         if res.status_code == 200:
             data = json.loads(res.content)
             blood_sugar = str(data[0]["sgv"])
             try:
-                direction = directions[data[0]["direction"]]
+                direction = DIRECTIONS[data[0]["direction"]]
             except KeyError:
+                logger.error(data[0]["direction"] + " not in DIRECTIONS")
                 direction = "unable to get direction data."
 
             input_subject = handler_input.request_envelope.request.intent.slots["subject"].value
@@ -77,6 +75,8 @@ class BloodSugarIntentHandler(AbstractRequestHandler):
 
             speak_output = f"{subject} blood sugar is {blood_sugar} and {direction}."
         else:
+            logger.error(
+                f"Status Code: {res.status_code} Reason: {res.reason}")
             speak_output = "I couldn't get the reading. Please try again!"
 
         return (
